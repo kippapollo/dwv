@@ -298,9 +298,12 @@ export class LayerGroup {
     addTranslation(translation: object): void;
     addViewLayer(): ViewLayer;
     calculateFitScale(): number | undefined;
+    // (undocumented)
+    deleteDrawLayers(): void;
     display(flag: boolean): void;
     draw(): void;
     empty(): void;
+    flip(x: boolean, y: boolean): void;
     flipScaleZ(): void;
     getActiveDrawLayer(): DrawLayer;
     getActiveViewLayer(): ViewLayer;
@@ -319,6 +322,7 @@ export class LayerGroup {
     removeEventListener(type: string, callback: object): void;
     removeLayer(layer: ViewLayer | DrawLayer): void;
     reset(): void;
+    rotate(angle: number): void;
     searchViewLayers(meta: object): ViewLayer[];
     setActiveDrawLayer(index: number): void;
     setActiveDrawLayerByDataIndex(index: number): void;
@@ -643,6 +647,7 @@ export class ViewLayer {
     draw(): void;
     enableImageSmoothing(flag: boolean): void;
     fitToContainer(fitScale1D: number, fitSize: object, fitOffset: object): void;
+    flip(x: boolean, y: boolean): void;
     getBaseSize(): object;
     getDataIndex(): number;
     getId(): string;
@@ -656,6 +661,7 @@ export class ViewLayer {
     onimageset: (event: object) => void;
     planePosToDisplay(x: number, y: number): object;
     removeEventListener(type: string, callback: object): void;
+    rotate(angle: number): void;
     setBaseOffset(scrollOffset: Vector3D, planeOffset: Vector3D): boolean;
     setCurrentPosition(position: Point, _index: Index): boolean;
     setOffset(newOffset: object): void;

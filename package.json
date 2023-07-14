@@ -1,6 +1,6 @@
 {
   "name": "dwv",
-  "version": "0.33.0-beta.2",
+  "version": "0.33.1-apollo.1",
   "description": "DICOM Web Viewer.",
   "keywords": [
     "DICOM",
@@ -8,11 +8,11 @@
     "imaging"
   ],
   "license": "GPL-3.0",
-  "author": "ivmartel <ivmartel@gmail.com>",
-  "homepage": "https://ivmartel.github.io/dwv/",
+  "author": "apollo <kippapollo@gmail.com>",
+  "homepage": "https://github.com/kippapollo",
   "repository": {
     "type": "git",
-    "url": "git://github.com/ivmartel/dwv.git"
+    "url": "git://github.com/kippapollo/dwv.git"
   },
   "main": "dist/dwv.min.js",
   "types": "dist/dwv.d.ts",

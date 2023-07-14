@@ -655,7 +655,13 @@ export class LayerGroup {
       layerDiv.remove();
     }
   }
-
+  deleteDrawLayers() {
+    for (let j = 0; j < this.#layers.length; ++j) {
+      if (this.#layers[j] instanceof DrawLayer) {
+        this.#layers[j].deleteDraws(()=>{})
+      }
+    }
+  }
   /**
    * Show a crosshair at a given position.
    *
@@ -982,13 +988,43 @@ export class LayerGroup {
       ]
     });
   }
-
+  /**
+   * Set the layer rotation.
+   *
+   * @param {number} angle The angle of rotation.
+   */
+  rotate(angle) {
+    for (let i = 0; i < this.#layers.length; ++i) {
+      if (this.#layers[i] instanceof ViewLayer) {
+        this.#layers[i].rotate(angle);
+      }
+    }
+  }
+    /**
+   * Set the layer flip xy.
+   *
+   * @param {boolean} x The flip x.
+   * @param {boolean} y The flip y.
+   */
+  flip(x, y) {
+    for (let i = 0; i < this.#layers.length; ++i) {
+      if (this.#layers[i] instanceof ViewLayer) {
+        this.#layers[i].flip(x, y);
+      }
+    }
+  }
   /**
    * Reset the stage to its initial scale and no offset.
    */
   reset() {
     this.setScale(this.#baseScale);
     this.setOffset({x: 0, y: 0, z: 0});
+    for (let i = 0; i < this.#layers.length; ++i) {
+      if (this.#layers[i] instanceof ViewLayer) {
+        this.#layers[i].rotate(0);
+        this.#layers[i].flip(false, false);
+      }
+    }    
   }
 
   /**

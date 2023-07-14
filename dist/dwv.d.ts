@@ -1740,6 +1740,7 @@ export declare class LayerGroup {
      * @param {ViewLayer | DrawLayer} layer The layer to remove.
      */
     removeLayer(layer: ViewLayer | DrawLayer): void;
+    deleteDrawLayers(): void;
     /**
      * Update layers (but not the active view layer) to a position change.
      *
@@ -1796,6 +1797,19 @@ export declare class LayerGroup {
      * @fires LayerGroup#offsetchange
      */
     setOffset(newOffset: object): void;
+    /**
+     * Set the layer rotation.
+     *
+     * @param {number} angle The angle of rotation.
+     */
+    rotate(angle: number): void;
+    /**
+     * Set the layer flip xy.
+     *
+     * @param {boolean} x The flip x.
+     * @param {boolean} y The flip y.
+     */
+    flip(x: boolean, y: boolean): void;
     /**
      * Reset the stage to its initial scale and no offset.
      */
@@ -3397,6 +3411,19 @@ export declare class ViewLayer {
      * Add a flip offset along the layer X axis.
      */
     addFlipOffsetX(): void;
+    /**
+     * Set the layer rotation.
+     *
+     * @param {number} angle The angle of rotation.
+     */
+    rotate(angle: number): void;
+    /**
+     * Set the layer flip xy.
+     *
+     * @param {boolean} x The flip x.
+     * @param {boolean} y The flip y.
+     */
+    flip(x: boolean, y: boolean): void;
     /**
      * Add a flip offset along the layer Y axis.
      */

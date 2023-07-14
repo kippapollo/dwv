@@ -139,6 +139,18 @@ export class ViewLayer {
   #flipOffset = {x: 0, y: 0};
 
   /**
+   * The angle of rotation.
+   *
+   * @type {number}
+   */
+  #rotateAngle = 0;
+  /**
+   * The flip xy
+   *
+   * @type {object}
+   */
+   #flipxy = {x: false, y: false};
+   /**
    * Data update flag.
    *
    * @type {boolean}
@@ -334,6 +346,23 @@ export class ViewLayer {
     this.#offset.x += this.#flipOffset.x;
   }
 
+  /**
+   * Set the layer rotation.
+   *
+   * @param {number} angle The angle of rotation.
+   */
+  rotate(angle) {
+    this.#rotateAngle = angle
+  };
+  /**
+  * Set the layer flip xy.
+  *
+  * @param {boolean} x The flip x.
+  * @param {boolean} y The flip y.
+  */
+  flip(x, y) {
+    this.#flipxy = {x: x, y: y};
+  }
   /**
    * Add a flip offset along the layer Y axis.
    */
@@ -586,7 +615,9 @@ export class ViewLayer {
     // [ a c e ]
     // [ b d f ]
     // [ 0 0 1 ]
-    this.#context.setTransform(
+    const a = (Math.PI / 180) * this.#rotateAngle;
+    this.#context.resetTransform()
+    this.#context.transform(
       this.#scale.x,
       0,
       0,
@@ -594,6 +625,18 @@ export class ViewLayer {
       -1 * this.#offset.x * this.#scale.x,
       -1 * this.#offset.y * this.#scale.y
     );
+    this.#context.translate(this.#offscreenCanvas.width/2, this.#offscreenCanvas.height/2)
+    this.#context.rotate(a)
+    let flipx = 1;
+    let flipy = 1;
+    if (this.#flipxy.x) {
+      flipx = -1;
+    }
+    if (this.#flipxy.y) {
+      flipy = -1;
+    }
+    this.#context.scale(flipx, flipy)
+    this.#context.translate(-this.#offscreenCanvas.width/2, -this.#offscreenCanvas.height/2)
 
     // disable smoothing (set just before draw, could be reset by resize)
     this.#context.imageSmoothingEnabled = this.#imageSmoothingEnabled;
