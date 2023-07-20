@@ -80,7 +80,18 @@ export class DrawLayer {
    * @type {object}
    */
   #flipOffset = {x: 0, y: 0};
-
+  /**
+   * The angle of rotation.
+   *
+   * @type {number}
+   */
+  #rotateAngle = 0;
+  /**
+    * The flip xy
+    *
+    * @type {object}
+    */
+  #flipxy = {x: false, y: false};
   /**
    * The draw controller.
    *
@@ -231,6 +242,128 @@ export class DrawLayer {
     const offset = this.#konvaStage.offset();
     offset.y += this.#flipOffset.y;
     this.#konvaStage.offset(offset);
+  }
+  
+  rotate(angle) {
+    const diff = angle - this.#rotateAngle;
+    const angleRad = (Math.PI / 180) * diff;
+    const cosa = Math.cos(angleRad);
+    const sina = Math.sin(angleRad);
+    this.#rotateAngle = angle;
+    const basesize = this.getBaseSize();
+    const lines = this.#konvaStage.find('Line');
+    let label_pos = [];
+    for (let i = 0; i < lines.length; ++i) {
+      let points = lines[i].getAttr("points");
+      for (let j = 0; j < points.length; j+=2) {
+        const ptx = points[j] - basesize.x / 2;
+        const pty = points[j+1] - basesize.y / 2;
+        const ptxx = ptx * cosa - pty * sina;
+        const ptyy = ptx * sina + pty * cosa;
+        points[j] = ptxx + basesize.x / 2;
+        points[j+1] = ptyy + basesize.y / 2;
+      }
+      lines[i].setAttr("points", points);
+      if (lines[i].getAttr("name") === "shape") {
+        const parent = lines[i].getParent();
+        const pid = parent.getAttr("id");
+        label_pos.push({pt: points, pid:pid});
+      }
+    }
+    const labels = this.#konvaStage.find('Label');
+    for (let i = 0; i < labels.length; ++i) {
+      let x = labels[i].getAttr("x");
+      let y = labels[i].getAttr("y");
+      const ptx = x - basesize.x / 2;
+      const pty = y - basesize.y / 2;
+      const ptxx = ptx * cosa - pty * sina;
+      const ptyy = ptx * sina + pty * cosa;
+      labels[i].setAttr("x", ptxx + basesize.x / 2);
+      labels[i].setAttr("y", ptyy + basesize.y / 2);
+      const parent = labels[i].getParent();
+      const pid = parent.getAttr("id");
+      for(let j = 0; j < label_pos.length; j ++) {
+        if (label_pos[j].pid === pid) {
+          const pt = label_pos[j].pt;
+          const sz = labels[i].getClientRect();
+          if (pt[0] < pt[2])
+            labels[j].setAttr("x", pt[2] - sz.width / 2);
+          else
+            labels[j].setAttr("x", pt[2]);
+          if (pt[3] > pt[1])
+            labels[j].setAttr("y", pt[3]);
+          else
+            labels[j].setAttr("y", pt[3] - sz.height);
+        }
+      }      
+    }
+  }
+  /**
+  * Set the layer flip xy.
+  *
+  * @param {boolean} x The flip x.
+  * @param {boolean} y The flip y.
+  */
+   flip(x, y) {
+    let diffx = this.#flipxy.x != x;
+    let diffy = this.#flipxy.y != y;
+    if (Math.abs(this.#rotateAngle % 180) > 45)
+    {
+      diffx = this.#flipxy.y != y;
+      diffy = this.#flipxy.x != x;  
+    }
+    this.#flipxy = {x: x, y: y};
+    const basesize = this.getBaseSize();
+    const lines = this.#konvaStage.find('Line');
+    let label_pos = [];
+    for (let i = 0; i < lines.length; ++i) {
+      let points = lines[i].getAttr("points");
+      for (let j = 0; j < points.length; j+=2) {
+        let ptx = points[j] - basesize.x / 2;
+        let pty = points[j+1] - basesize.y / 2;
+        if (diffx)
+          ptx = -ptx;
+        if (diffy)
+          pty = -pty;
+        points[j] = ptx + basesize.x / 2;
+        points[j+1] = pty + basesize.y / 2;        
+      }
+      lines[i].setAttr("points", points);
+      if (lines[i].getAttr("name") === "shape") {
+        const parent = lines[i].getParent();
+        const pid = parent.getAttr("id");
+        label_pos.push({pt: points, pid:pid});
+      }
+    }
+    const labels = this.#konvaStage.find('Label');
+    for (let i = 0; i < labels.length; ++i) {
+      let x = labels[i].getAttr("x");
+      let y = labels[i].getAttr("y");
+      let ptx = x - basesize.x / 2;
+      let pty = y - basesize.y / 2;
+      if (diffx)
+        ptx = -ptx;
+      if (diffy)
+        pty = -pty;
+      labels[i].setAttr("x", ptx + basesize.x / 2);
+      labels[i].setAttr("y", pty + basesize.y / 2);
+      const parent = labels[i].getParent();
+      const pid = parent.getAttr("id");
+      for(let j = 0; j < label_pos.length; j ++) {
+        if (label_pos[j].pid === pid) {
+          const pt = label_pos[j].pt;
+          const sz = labels[i].getClientRect();
+          if (pt[0] < pt[2])
+            labels[j].setAttr("x", pt[2] - sz.width / 2);
+          else
+            labels[j].setAttr("x", pt[2]);
+          if (pt[3] > pt[1])
+            labels[j].setAttr("y", pt[3]);
+          else
+            labels[j].setAttr("y", pt[3] - sz.height);
+        }
+      }
+    }    
   }
 
   /**

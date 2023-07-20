@@ -471,7 +471,7 @@ export class App {
    * Reset the layout of the application.
    */
   resetLayout() {
-    this.#stage.reset();
+    this.#stage.reset(true);
     this.#stage.draw();
   }
 
@@ -1066,7 +1066,8 @@ export class App {
    * Reset the app zoom.s
    */
   resetZoom() {
-    this.resetLayout();
+    this.#stage.reset(false);
+    this.#stage.draw();
   }
 
   /**

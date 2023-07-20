@@ -291,9 +291,9 @@ export class Stage {
   /**
    * Reset the stage: calls reset on all layer groups.
    */
-  reset() {
+  reset(resetRotate) {
     for (let i = 0; i < this.#layerGroups.length; ++i) {
-      this.#layerGroups[i].reset();
+      this.#layerGroups[i].reset(resetRotate);
     }
   }
 

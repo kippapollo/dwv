@@ -729,6 +729,14 @@ export declare class DrawLayer {
      * Add a flip offset along the layer Y axis.
      */
     addFlipOffsetY(): void;
+    rotate(angle: any): void;
+    /**
+     * Set the layer flip xy.
+     *
+     * @param {boolean} x The flip x.
+     * @param {boolean} y The flip y.
+     */
+    flip(x: boolean, y: boolean): void;
     /**
      * Set the layer scale.
      *
@@ -1764,7 +1772,7 @@ export declare class LayerGroup {
      *
      * @returns {object|undefined} The largest size as {x,y}.
      */
-    getMaxSize(): object | undefined;
+    getMaxSize(rotated: any): object | undefined;
     /**
      * Flip all layers along the Z axis without offset compensation.
      */
@@ -1813,7 +1821,7 @@ export declare class LayerGroup {
     /**
      * Reset the stage to its initial scale and no offset.
      */
-    reset(): void;
+    reset(resetRotate: any): void;
     /**
      * Draw the layer.
      */
@@ -3394,7 +3402,7 @@ export declare class ViewLayer {
      *
      * @returns {object} The 2D size as {x,y}.
      */
-    getImageWorldSize(): object;
+    getImageWorldSize(rotated: any): object;
     /**
      * Get the layer opacity.
      *
@@ -3561,6 +3569,12 @@ export declare class ViewLayer {
      * Clear the context.
      */
     clear(): void;
+    /**
+     * get the current image data as URL.
+     *
+     * @returns {string} Image data URL
+     */
+    getImageDataURL(): string;
     #private;
 }
 

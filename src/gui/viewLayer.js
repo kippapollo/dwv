@@ -243,6 +243,7 @@ export class ViewLayer {
    * @returns {object} The image data.
    */
   getImageData() {
+    this.#viewController.generateImageData(this.#imageData);
     return this.#imageData;
   }
 
@@ -297,8 +298,15 @@ export class ViewLayer {
    *
    * @returns {object} The 2D size as {x,y}.
    */
-  getImageWorldSize() {
-    return this.#viewController.getImageWorldSize();
+  getImageWorldSize(rotated) {
+    var size = this.#viewController.getImageWorldSize();
+    if (rotated && Math.abs(this.#rotateAngle % 180) > 45) {
+      return {
+        x: size.y,
+        y: size.x
+      };
+    }
+    return size;
   }
 
   /**
@@ -641,6 +649,7 @@ export class ViewLayer {
     // disable smoothing (set just before draw, could be reset by resize)
     this.#context.imageSmoothingEnabled = this.#imageSmoothingEnabled;
     // draw image
+    var rect = this.#containerDiv.getBoundingClientRect();
     this.#context.drawImage(this.#offscreenCanvas, 0, 0);
 
     /**
@@ -729,6 +738,9 @@ export class ViewLayer {
    * @param {object} fitOffset The fit offset as {x,y}.
    */
   fitToContainer(fitScale1D, fitSize, fitOffset) {
+    if (fitSize.x * fitSize.y === 0) {
+      return;
+    }
     let needsDraw = false;
 
     // update canvas size if needed (triggers canvas reset)
@@ -989,5 +1001,13 @@ export class ViewLayer {
     // restore the transform
     this.#context.restore();
   }
-
+  /**
+   * get the current image data as URL.
+   *
+   * @returns {string} Image data URL
+   */
+  getImageDataURL() {
+    this.#updateImageData();
+    return this.#offscreenCanvas.toDataURL();
+  }
 } // ViewLayer class

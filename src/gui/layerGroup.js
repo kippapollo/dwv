@@ -811,10 +811,11 @@ export class LayerGroup {
     // check container
     if (this.#containerDiv.offsetWidth === 0 &&
       this.#containerDiv.offsetHeight === 0) {
-      throw new Error('Cannot fit to zero sized container.');
+      //throw new Error('Cannot fit to zero sized container.');
+      return undefined;
     }
     // get max size
-    const maxSize = this.getMaxSize();
+    const maxSize = this.getMaxSize(true);
     if (typeof maxSize === 'undefined') {
       return undefined;
     }
@@ -832,7 +833,7 @@ export class LayerGroup {
    */
   setFitScale(scaleIn) {
     // get maximum size
-    const maxSize = this.getMaxSize();
+    const maxSize = this.getMaxSize(false);
     // exit if none
     if (typeof maxSize === 'undefined') {
       return;
@@ -864,11 +865,11 @@ export class LayerGroup {
    *
    * @returns {object|undefined} The largest size as {x,y}.
    */
-  getMaxSize() {
+  getMaxSize(rotated) {
     let maxSize = {x: 0, y: 0};
     for (let j = 0; j < this.#layers.length; ++j) {
       if (this.#layers[j] instanceof ViewLayer) {
-        const size = this.#layers[j].getImageWorldSize();
+        const size = this.#layers[j].getImageWorldSize(rotated);
         if (size.x > maxSize.x) {
           maxSize.x = size.x;
         }
@@ -995,9 +996,7 @@ export class LayerGroup {
    */
   rotate(angle) {
     for (let i = 0; i < this.#layers.length; ++i) {
-      if (this.#layers[i] instanceof ViewLayer) {
-        this.#layers[i].rotate(angle);
-      }
+      this.#layers[i].rotate(angle);
     }
   }
     /**
@@ -1008,23 +1007,23 @@ export class LayerGroup {
    */
   flip(x, y) {
     for (let i = 0; i < this.#layers.length; ++i) {
-      if (this.#layers[i] instanceof ViewLayer) {
-        this.#layers[i].flip(x, y);
-      }
+      this.#layers[i].flip(x, y);
     }
   }
   /**
    * Reset the stage to its initial scale and no offset.
    */
-  reset() {
+  reset(resetRotate) {
     this.setScale(this.#baseScale);
     this.setOffset({x: 0, y: 0, z: 0});
-    for (let i = 0; i < this.#layers.length; ++i) {
-      if (this.#layers[i] instanceof ViewLayer) {
-        this.#layers[i].rotate(0);
-        this.#layers[i].flip(false, false);
+    if (resetRotate) {
+      for (let i = 0; i < this.#layers.length; ++i) {
+        if (this.#layers[i] instanceof ViewLayer) {
+          this.#layers[i].rotate(0);
+          this.#layers[i].flip(false, false);
+        }
       }
-    }    
+    }
   }
 
   /**

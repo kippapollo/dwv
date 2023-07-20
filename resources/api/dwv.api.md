@@ -146,6 +146,7 @@ export class DrawLayer {
     display(flag: boolean): void;
     draw(): void;
     fitToContainer(fitScale1D: number, fitSize: object, fitOffset: object): void;
+    flip(x: boolean, y: boolean): void;
     getBaseSize(): object;
     getDataIndex(): number;
     getDrawController(): object;
@@ -157,6 +158,8 @@ export class DrawLayer {
     isGroupVisible(id: string): boolean;
     isVisible(): boolean;
     removeEventListener(type: string, callback: object): void;
+    // (undocumented)
+    rotate(angle: any): void;
     setBaseOffset(scrollOffset: Vector3D, planeOffset: Vector3D): boolean;
     setCurrentPosition(position: Point, index: Index): boolean;
     setOffset(newOffset: object): void;
@@ -311,7 +314,7 @@ export class LayerGroup {
     getBaseScale(): object;
     getDivId(): string;
     getDrawLayersByDataIndex(index: number): DrawLayer[];
-    getMaxSize(): object | undefined;
+    getMaxSize(rotated: any): object | undefined;
     getNumberOfLayers(): number;
     getOffset(): object;
     getScale(): object;
@@ -321,7 +324,7 @@ export class LayerGroup {
     getViewLayersByDataIndex(index: number): ViewLayer[];
     removeEventListener(type: string, callback: object): void;
     removeLayer(layer: ViewLayer | DrawLayer): void;
-    reset(): void;
+    reset(resetRotate: any): void;
     rotate(angle: number): void;
     searchViewLayers(meta: object): ViewLayer[];
     setActiveDrawLayer(index: number): void;
@@ -652,7 +655,8 @@ export class ViewLayer {
     getDataIndex(): number;
     getId(): string;
     getImageData(): object;
-    getImageWorldSize(): object;
+    getImageDataURL(): string;
+    getImageWorldSize(rotated: any): object;
     getOpacity(): number;
     getViewController(): ViewController;
     initialise(size: object, spacing: object, alpha: number): void;

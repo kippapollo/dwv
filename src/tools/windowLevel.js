@@ -93,7 +93,7 @@ export class WindowLevel {
     // data range
     const range = viewController.getImageRescaledDataRange();
     // 1/1000 seems to give reasonable results...
-    const pixelToIntensity = (range.max - range.min) * 0.01;
+    const pixelToIntensity = (range.max - range.min) * 0.001;
 
     // calculate new window level
     const center = parseInt(viewController.getWindowLevel().center, 10);
